@@ -500,35 +500,34 @@ function closeHotspotModal() {
 
 // -------------------------------------------------------------
 // -------------------------------------------------------------
+// -------------------------------------------------------------
 // 4. INTERACTIVE CAD EXPLODED VIEW LAB
 // -------------------------------------------------------------
 const cadCanvas = document.getElementById('cad-explorer-canvas');
 const cadCtx = cadCanvas ? cadCanvas.getContext('2d') : null;
 const cadBaseImage = new Image();
 
-// Fetch base image from Node.js backend API
+// Fetch base chassis image from backend API
 cadBaseImage.src = '/api/base-image';
 
-// Redraw canvas once base image loads
 cadBaseImage.onload = () => {
   renderCadExplorer();
 };
 
-// Component definition with increased explosion displacement offsets (ox, oy)
+// Component definitions with enhanced explosion displacement offsets
 const cadComponents = {
-  front_wing: { src: '/api/components/front_wing.png', ox: -120, oy: 60, label: 'Aero Front Wing' },
+  front_wing: { src: '/api/components/front_wing.png', ox: -140, oy: 70, label: 'Aero Front Wing' },
   monocoque_chassis: { src: '/api/components/monocoque_chassis.png', ox: 0, oy: 0, label: 'Carbon Monocoque' },
-  v6_turbo_hybrid: { src: '/api/components/v6_turbo_hybrid.png', ox: 80, oy: -100, label: '066/12 Power Unit' },
-  halo_safety: { src: '/api/components/halo_safety.png', ox: -20, oy: -80, label: 'Titanium Halo' },
-  rear_wing_drs: { src: '/api/components/rear_wing_drs.png', ox: 100, oy: -90, label: 'DRS Rear Assembly' },
-  pirelli_wheels: { src: '/api/components/pirelli_wheels.png', ox: 0, oy: 50, label: 'Pirelli 18" Wheels' }
+  v6_turbo_hybrid: { src: '/api/components/v6_turbo_hybrid.png', ox: 90, oy: -110, label: '066/12 Power Unit' },
+  halo_safety: { src: '/api/components/halo_safety.png', ox: -20, oy: -90, label: 'Titanium Halo' },
+  rear_wing_drs: { src: '/api/components/rear_wing_drs.png', ox: 120, oy: -100, label: 'DRS Rear Assembly' },
+  pirelli_wheels: { src: '/api/components/pirelli_wheels.png', ox: 0, oy: 60, label: 'Pirelli 18" Wheels' }
 };
 
 const loadedCadImages = {};
 Object.entries(cadComponents).forEach(([key, val]) => {
   const img = new Image();
   img.src = val.src;
-  // Redraw canvas automatically as each component image loads
   img.onload = () => {
     renderCadExplorer();
   };
@@ -550,7 +549,7 @@ function initCadExplorer() {
   window.addEventListener('resize', resizeCadCanvas);
   setTimeout(resizeCadCanvas, 100);
 
-  // Explode slider listener
+  // Real-time explosion slider
   const slider = document.getElementById('cad-explode-slider');
   const sliderVal = document.getElementById('cad-explode-value');
   if (slider) {
@@ -561,7 +560,7 @@ function initCadExplorer() {
     });
   }
 
-  // CAD Mode Buttons
+  // Shader Mode Toggles (Exploded, Wireframe, Thermal, Aero)
   const modeButtons = document.querySelectorAll('[data-cad-mode]');
   modeButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -572,7 +571,7 @@ function initCadExplorer() {
     });
   });
 
-  // Sub-Assembly Buttons
+  // Sub-Assembly Selector
   const subButtons = document.querySelectorAll('[data-subassembly]');
   subButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -596,7 +595,7 @@ function renderCadExplorer() {
   cadCtx.fillStyle = '#050505';
   cadCtx.fillRect(0, 0, cw, ch);
 
-  // Background Blueprint Grid for CAD feel
+  // Draw CAD Blueprint Grid
   cadCtx.strokeStyle = 'rgba(0, 214, 255, 0.05)';
   cadCtx.lineWidth = 1;
   const gridSize = 24;
@@ -613,54 +612,33 @@ function renderCadExplorer() {
     cadCtx.stroke();
   }
 
-  // Draw Base or Exploded Components
   const dw = cw * 0.88;
   const dh = (dw / 800) * 450;
   const dx = (cw - dw) / 2;
   const dy = (ch - dh) / 2;
-
   const factor = state.explodedAmount;
 
   if (state.activeCadMode === 'wireframe') {
-    // Holographic wireframe CAD shader effect
     cadCtx.filter = 'grayscale(100%) brightness(1.6) contrast(200%)';
     cadCtx.drawImage(cadBaseImage, dx, dy, dw, dh);
     cadCtx.filter = 'none';
 
-    // Add cyan holographic scan lines
     cadCtx.fillStyle = 'rgba(0, 214, 255, 0.12)';
     for (let y = dy; y < dy + dh; y += 4) {
       cadCtx.fillRect(dx, y, dw, 1);
     }
   } else if (state.activeCadMode === 'thermal') {
-    // Thermal heat map filter (engine + brakes glow red/yellow)
     cadCtx.drawImage(cadBaseImage, dx, dy, dw, dh);
     
-    // Thermal overlay on power unit
     const gradEngine = cadCtx.createRadialGradient(dx + dw * 0.65, dy + dh * 0.55, 10, dx + dw * 0.65, dy + dh * 0.55, 80);
     gradEngine.addColorStop(0, 'rgba(255, 50, 0, 0.7)');
     gradEngine.addColorStop(0.5, 'rgba(255, 180, 0, 0.4)');
     gradEngine.addColorStop(1, 'transparent');
     cadCtx.fillStyle = gradEngine;
     cadCtx.fillRect(dx, dy, dw, dh);
-
-    // Front & rear brake heat
-    const gradBrakeF = cadCtx.createRadialGradient(dx + dw * 0.31, dy + dh * 0.75, 5, dx + dw * 0.31, dy + dh * 0.75, 40);
-    gradBrakeF.addColorStop(0, 'rgba(255, 230, 0, 0.8)');
-    gradBrakeF.addColorStop(1, 'transparent');
-    cadCtx.fillStyle = gradBrakeF;
-    cadCtx.fillRect(dx, dy, dw, dh);
-
-    const gradBrakeR = cadCtx.createRadialGradient(dx + dw * 0.95, dy + dh * 0.75, 5, dx + dw * 0.95, dy + dh * 0.75, 40);
-    gradBrakeR.addColorStop(0, 'rgba(255, 230, 0, 0.8)');
-    gradBrakeR.addColorStop(1, 'transparent');
-    cadCtx.fillStyle = gradBrakeR;
-    cadCtx.fillRect(dx, dy, dw, dh);
   } else if (state.activeCadMode === 'aero') {
-    // Aerodynamic streamline mode
     cadCtx.drawImage(cadBaseImage, dx, dy, dw, dh);
     
-    // Draw flowing particle streamlines
     cadCtx.strokeStyle = 'rgba(0, 214, 255, 0.6)';
     cadCtx.lineWidth = 1.5;
     for (let i = 0; i < 8; i++) {
@@ -675,16 +653,16 @@ function renderCadExplorer() {
       cadCtx.stroke();
     }
   } else {
-    // Standard Exploded Multi-Layer CAD rendering
-    if (factor < 0.05 && state.activeSubAssembly === 'all') {
+    // Exploded View Mode
+    if (factor < 0.02 && state.activeSubAssembly === 'all') {
       cadCtx.drawImage(cadBaseImage, dx, dy, dw, dh);
     } else {
-      // Draw ghost monocoque chassis
-      cadCtx.globalAlpha = 0.4;
+      // Draw faint background ghost chassis
+      cadCtx.globalAlpha = 0.25;
       cadCtx.drawImage(cadBaseImage, dx, dy, dw, dh);
       cadCtx.globalAlpha = 1.0;
 
-      // Draw separated components with displacement
+      // Draw each separated component with displacement
       Object.entries(cadComponents).forEach(([key, comp]) => {
         const isSelected = state.activeSubAssembly === 'all' || state.activeSubAssembly === key;
         const img = loadedCadImages[key];
@@ -693,16 +671,16 @@ function renderCadExplorer() {
         const offX = comp.ox * factor * (dw / 800);
         const offY = comp.oy * factor * (dh / 450);
 
-        cadCtx.globalAlpha = isSelected ? 1.0 : 0.2;
+        cadCtx.globalAlpha = isSelected ? 1.0 : 0.15;
         cadCtx.drawImage(img, dx + offX, dy + offY, dw, dh);
 
-        // Leader lines and coordinates when exploded
-        if (factor > 0.3 && isSelected) {
-          cadCtx.strokeStyle = 'rgba(0, 214, 255, 0.7)';
+        // Draw leader lines connecting separated parts back to center
+        if (factor > 0.25 && isSelected && key !== 'monocoque_chassis') {
+          cadCtx.strokeStyle = 'rgba(0, 214, 255, 0.6)';
           cadCtx.lineWidth = 1;
           cadCtx.setLineDash([3, 3]);
           cadCtx.beginPath();
-          cadCtx.moveTo(dx + dw * 0.5 + offX * 0.5, dy + dh * 0.5 + offY * 0.5);
+          cadCtx.moveTo(dx + dw * 0.5 + offX, dy + dh * 0.5 + offY);
           cadCtx.lineTo(dx + dw * 0.5, dy + dh * 0.5);
           cadCtx.stroke();
           cadCtx.setLineDash([]);
@@ -711,64 +689,6 @@ function renderCadExplorer() {
       cadCtx.globalAlpha = 1.0;
     }
   }
-}
-
-function updateSubAssemblyDetails(assemblyKey) {
-  const details = {
-    all: {
-      title: 'Scuderia Ferrari SF-24 Integrated Chassis',
-      code: 'CHASSIS-SF24-001',
-      weight: '798 kg (with driver)',
-      desc: 'Complete carbon-fibre and honeycomb composite structure compliant with 2024/2025 FIA Technical Regulations.'
-    },
-    front_wing: {
-      title: 'Front Wing Aerodynamic Plane & Endplates',
-      code: 'AERO-FW-EVO3',
-      weight: '9.8 kg',
-      desc: 'Carbon composite quad-plane aerofoil with sculpted ground outwash vortex generators and FIA-spec nosecone impact crash box.'
-    },
-    monocoque_chassis: {
-      title: 'Maranello Carbon Monocoque Tub',
-      code: 'MONO-SF24-C9',
-      weight: '62.4 kg',
-      desc: 'Autoclaved carbon-fibre sandwich monocoque containing Kevlar anti-penetration panels and 50G FIA side-impact crash spars.'
-    },
-    v6_turbo_hybrid: {
-      title: 'Ferrari 066/12 90° V6 Turbo Hybrid Power Unit',
-      code: 'PU-066/12-HYB',
-      weight: '150 kg (FIA minimum limit)',
-      desc: '1.6L internal combustion engine with 15,000 RPM redline, paired to dual MGU-K and MGU-H energy recovery systems generating >1020 HP.'
-    },
-    halo_safety: {
-      title: 'Titanium Halo Driver Protection Structure',
-      code: 'HALO-TITAN-G5',
-      weight: '7.0 kg',
-      desc: 'Additive-manufactured Grade 5 titanium structure tested to 125 kN static overhead and lateral impact loads.'
-    },
-    rear_wing_drs: {
-      title: 'High-Downforce DRS Rear Wing & Diffuser Assembly',
-      code: 'DRS-RW-MONZA',
-      weight: '12.2 kg',
-      desc: 'Hydraulic carbon DRS actuator with dual beam-wings tuned to maximize low-pressure air extraction from the floor Venturi tunnels.'
-    },
-    pirelli_wheels: {
-      title: '18-Inch BBS Forged Magnesium Wheels & Carbon Brakes',
-      code: 'WHEEL-BBS-18',
-      weight: '18.5 kg / set',
-      desc: 'Forged magnesium rims wrapped in Pirelli P-Zero slicks with Brembo 6-piston monobloc calipers and carbon-carbon discs.'
-    }
-  };
-
-  const current = details[assemblyKey] || details.all;
-  const titleEl = document.getElementById('cad-detail-title');
-  const codeEl = document.getElementById('cad-detail-code');
-  const weightEl = document.getElementById('cad-detail-weight');
-  const descEl = document.getElementById('cad-detail-desc');
-
-  if (titleEl) titleEl.textContent = current.title;
-  if (codeEl) codeEl.textContent = current.code;
-  if (weightEl) weightEl.textContent = current.weight;
-  if (descEl) descEl.textContent = current.desc;
 }
 
 // -------------------------------------------------------------
