@@ -953,46 +953,7 @@ class FerrariAudioEngine {
   }
 }
 
-function initAudioEngine() {
-  state.audioEngine = new FerrariAudioEngine();
 
-  const toggleBtn = document.getElementById('nav-audio-toggle');
-  const soundIcon = document.getElementById('nav-audio-icon');
-  const soundLabel = document.getElementById('nav-audio-label');
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      state.isAudioMuted = !state.isAudioMuted;
-      if (!state.isAudioMuted) {
-        state.audioEngine.unmute();
-        state.audioEngine.setRPM(8500);
-        if (soundLabel) soundLabel.textContent = 'AUDIO: ON';
-        if (toggleBtn) toggleBtn.classList.add('border-cyan-400', 'text-cyan-400');
-      } else {
-        state.audioEngine.mute();
-        if (soundLabel) soundLabel.textContent = 'AUDIO: OFF';
-        if (toggleBtn) toggleBtn.classList.remove('border-cyan-400', 'text-cyan-400');
-      }
-    });
-  }
-
-  const revBtn = document.getElementById('btn-rev-engine');
-  if (revBtn) {
-    revBtn.addEventListener('click', () => {
-      state.audioEngine.revBurst();
-    });
-  }
-
-  const heroRevBtn = document.getElementById('hero-rev-btn');
-  if (heroRevBtn) {
-    heroRevBtn.addEventListener('click', () => {
-      if (state.isAudioMuted && toggleBtn) {
-        toggleBtn.click();
-      }
-      state.audioEngine.revBurst();
-    });
-  }
-}
 
 // -------------------------------------------------------------
 // 7. APPLE-GRADE MINIMAL NAVBAR & MARANELLO CLOCK
