@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scuderia Ferrari SF-24 | Apple-Level Engineering Scrollytelling</title>
+  <meta name="description" content="Experience the Scuderia Ferrari SF-24 Formula 1 car through high-precision scrollytelling, exploded CAD engineering diagrams, and live telemetry.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ferrari: {
+              red: '#E10600',
+              rosso: '#FF2800',
+              yellow: '#FFF200',
+              dark: '#050505',
+              surface: '#0A0A0C'
+            },
+            tech: {
+              blue: '#0050FF',
+              cyan: '#00D6FF'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.9/dist/lenis.min.js"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#050505] text-white selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 0. ULTRA-LUXURY PRELOADER -->
+  <!-- ------------------------------------------------------------- -->
+  <div id="preloader" class="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center transition-opacity duration-700">
+    <div class="relative flex flex-col items-center">
+      <div class="flex items-center gap-3 mb-6">
+        <svg class="w-8 h-8 text-red-600 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span class="text-2xl font-bold tracking-tight text-white/90 uppercase font-editorial">Ferrari</span>
+      </div>
+      <div class="text-[11px] font-mono tracking-[0.3em] text-white/40 uppercase mb-4">Initializing SF-24 CAD Telemetry</div>
+      
+      <!-- Progress Bar -->
+      <div class="w-56 h-1 bg-white/10 rounded-full overflow-hidden relative">
+        <div id="preloader-bar" class="h-full bg-gradient-to-r from-red-600 via-cyan-400 to-blue-500 w-0 transition-all duration-150"></div>
+      </div>
+      <div id="preloader-percent" class="text-xs font-mono text-cyan-400 mt-3">0%</div>
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 1. APPLE-GRADE MINIMAL GLASS NAVBAR -->
+  <!-- ------------------------------------------------------------- -->
+  <header id="apple-navbar" class="fixed top-0 left-0 right-0 z-[60] h-14 transition-all duration-500 flex items-center justify-between px-6 md:px-12">
+    <!-- Left: Ferrari Text Brand -->
+    <a href="#overview" class="flex items-center gap-2.5 group">
+      <div class="w-5 h-5 rounded-sm bg-red-600 flex items-center justify-center text-black font-black text-[10px] shadow-[0_0_12px_rgba(225,6,0,0.6)]">
+        SF
+      </div>
+      <span class="text-base font-semibold tracking-tight text-white/90 group-hover:text-white transition-colors">Ferrari</span>
+      <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.06] text-white/40 border border-white/[0.08] ml-1">SF-24</span>
+    </a>
+
+    <!-- Center: Minimal Navigation Links (Apple Style) -->
+    <nav class="hidden md:flex items-center gap-8 text-[13px] tracking-tight font-medium text-white/60">
+      <a href="#overview" class="hover:text-white transition-colors">Overview</a>
+      <a href="#history" class="hover:text-white transition-colors">History</a>
+      <a href="#cad-explorer" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>CAD Explorer
+      </a>
+      <a href="#telemetry" class="hover:text-white transition-colors">Telemetry</a>
+      <a href="#current-season" class="hover:text-white transition-colors">Current season</a>
+      <a href="#gallery" class="hover:text-white transition-colors">Gallery</a>
+      <a href="#fan-base" class="hover:text-white transition-colors">Fan base</a>
+    </nav>
+
+    <!-- Right: Audio Engine & CTA Button -->
+    <div class="flex items-center gap-3">
+      <!-- Web Audio Sound FX Toggle -->
+      <button id="nav-audio-toggle" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel text-[11px] font-mono tracking-wider text-white/70 hover:text-white border border-white/10 hover:border-cyan-400/40 transition-all" title="Toggle Ferrari V6 Engine Audio">
+        <i data-lucide="volume-2" class="w-3.5 h-3.5 text-cyan-400" id="nav-audio-icon"></i>
+        <span id="nav-audio-label">AUDIO: OFF</span>
+      </button>
+
+      <!-- Primary CTA Button with Gradient Border -->
+      <a href="#current-season" class="btn-primary px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight shadow-sm flex items-center gap-1.5">
+        <span>Current Season</span>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg glass-panel text-white/70 hover:text-white" aria-label="Toggle Navigation Menu">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" class="hidden fixed inset-0 z-[55] bg-[#050505]/95 backdrop-blur-2xl pt-20 px-8 flex flex-col gap-6 md:hidden">
+    <a href="#overview" class="text-xl font-medium text-white/80 hover:text-white">Overview</a>
+    <a href="#history" class="text-xl font-medium text-white/80 hover:text-white">History</a>
+    <a href="#cad-explorer" class="text-xl font-medium text-cyan-400 hover:text-white">CAD Explorer</a>
+    <a href="#telemetry" class="text-xl font-medium text-white/80 hover:text-white">Live Telemetry</a>
+    <a href="#current-season" class="text-xl font-medium text-white/80 hover:text-white">Current Season</a>
+    <a href="#gallery" class="text-xl font-medium text-white/80 hover:text-white">Gallery</a>
+    <a href="#fan-base" class="text-xl font-medium text-white/80 hover:text-white">Fan Base</a>
+  </div>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 2. HERO SCROLLYTELLING PINNED CONTAINER -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="overview" class="relative w-full scroll-mt-20">
+    <!-- Giant Scroll Track (520vh to scrub the 90-frame exploded sequence) -->
+    <div id="scrolly-container" class="relative w-full h-[520vh]">
+      
+      <!-- Pinned Viewport Container (GSAP Pin Target) -->
+      <div id="scrolly-canvas-wrapper" class="w-full h-screen overflow-hidden bg-[#050505] flex items-center justify-center relative">
+        
+        <!-- Ambient Subtle Background Void Radial Glow -->
+        <div class="absolute inset-0 pointer-events-none radial-glow-dark z-0"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] pointer-events-none radial-glow-red opacity-40 z-0"></div>
+
+        <!-- The High-Performance Canvas Image-Sequence Engine -->
+        <div class="relative w-full max-w-7xl h-full flex items-center justify-center px-4 z-10">
+          <canvas id="scrolly-canvas" class="w-full h-full object-contain pointer-events-none"></canvas>
+
+          <!-- Interactive Hotspots Container (Overlaid on Canvas during Exploded Phase) -->
+          <div id="canvas-hotspots" class="absolute inset-0 max-w-6xl mx-auto opacity-0 pointer-events-none transition-opacity duration-500 z-30">
+            <!-- Hotspots dynamically generated by app.js -->
+          </div>
+        </div>
+
+        <!-- Synchronized Unified Overlay Layer for Hero Banner & Story Beats -->
+        <div id="scrolly-overlay-layer" class="absolute inset-0 pointer-events-none z-20 flex flex-col justify-center px-6 md:px-12 max-w-7xl mx-auto pt-16 pb-28 md:pb-24">
+          
+          <!-- 0. CINEMATIC HERO BANNER (Active at Scroll = 0% to 15%) -->
+          <div id="hero-banner-content" class="story-beat-card max-w-2xl flex flex-col items-start pointer-events-auto">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-cyan-500/30 text-cyan-400 text-xs font-mono tracking-widest uppercase mb-4 shadow-[0_0_15px_rgba(0,214,255,0.15)]">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              Scuderia Ferrari HP // SF-24 Deconstructed
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-super-tight leading-[1.04] text-white mb-5">
+              Sculpted for Speed. <br>
+              <span class="gradient-text-ferrari">Deconstructed.</span>
+            </h1>
+
+            <p class="text-sm sm:text-base md:text-lg text-white/75 leading-relaxed font-normal mb-8 max-w-xl">
+              An Apple-grade interactive CAD scrollytelling journey through Ferrari’s 2024–2025 FIA Formula One challenger. Autoclaved monocoque, 1,020+ HP hybrid powertrain, and ground-effect telemetry.
+            </p>
+
+            <!-- Hero Quick Stats Matrix -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-6 p-4 rounded-xl glass-panel border border-white/[0.08] mb-8 w-full max-w-lg">
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">POWER UNIT</div>
+                <div class="text-base sm:text-xl font-bold font-mono text-white">1,020+ HP</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">MIN WEIGHT</div>
+                <div class="text-base sm:text-xl font-bold font-mono text-cyan-400">798 KG</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">REDLINE</div>
+                <div class="text-base sm:text-xl font-bold font-mono text-red-500">15,000 RPM</div>
+              </div>
+            </div>
+
+            <!-- Hero Action CTAs -->
+            <div class="flex flex-wrap items-center gap-4">
+              <a href="#cad-explorer" class="btn-primary px-6 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-semibold tracking-tight flex items-center gap-2">
+                <span>Explore CAD Studio</span>
+                <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+              </a>
+              <button id="hero-rev-btn" class="btn-glass px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-mono tracking-wider text-white/80 hover:text-white flex items-center gap-2">
+                <i data-lucide="volume-2" class="w-4 h-4 text-cyan-400"></i>
+                <span>Start Engine Audio</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 1. Story Beat 01: The Monocoque Core (Left Aligned) -->
+          <div id="beat-01" class="story-beat-card max-w-xl pointer-events-auto opacity-0 hidden">
+            <div class="p-6 sm:p-8 rounded-2xl glass-panel border-glow-cyan">
+              <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-cyan-400 uppercase mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                Phase 01 // Structural Synthesis
+              </div>
+              <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-super-tight leading-[1.08] text-white mb-4">
+                Autoclaved Honeycomb. <br>
+                <span class="gradient-text-ferrari">Carbon Monocoque.</span>
+              </h2>
+              <p class="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed font-normal mb-6">
+                Built upon an ultra-high modulus carbon-composite monocoque tub, engineered to withstand 50G side-impact forces with sub-millimeter torsional deflection.
+              </p>
+              <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] text-center">
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">WEIGHT</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">798 kg</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">COMPOSITE</div>
+                  <div class="text-base sm:text-lg font-bold text-cyan-400 font-mono">14 Plies</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">SAFETY</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">50G Crash</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Story Beat 02: Exploded Hybrid Powertrain (Right Aligned) -->
+          <div id="beat-02" class="story-beat-card max-w-xl self-end text-right pointer-events-auto opacity-0 hidden">
+            <div class="p-6 sm:p-8 rounded-2xl glass-panel border border-white/[0.1]">
+              <div class="flex items-center justify-end gap-2 text-xs font-mono tracking-widest-tag text-red-500 uppercase mb-3">
+                Phase 02 // Deconstructed Architecture
+                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              </div>
+              <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-super-tight leading-[1.08] text-white mb-4">
+                1,020+ Horsepower. <br>
+                <span class="gradient-text-silver">1.6L V6 Turbo Hybrid.</span>
+              </h2>
+              <p class="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed font-normal mb-6">
+                As the chassis deconstructs, the Ferrari 066/12 internal power unit is unveiled. Featuring Mahle Turbulent Jet Ignition, direct fuel injection at 500 bar, and dual MGU-K/MGU-H recovery.
+              </p>
+              <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] text-center">
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">REDLINE</div>
+                  <div class="text-base sm:text-lg font-bold text-red-500 font-mono">15,000 RPM</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">THERMAL EFF.</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">> 52%</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">MGU-K BOOST</div>
+                  <div class="text-base sm:text-lg font-bold text-cyan-400 font-mono">120 kW</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Story Beat 03: Ground-Effect Aerodynamics (Left Aligned) -->
+          <div id="beat-03" class="story-beat-card max-w-xl pointer-events-auto opacity-0 hidden">
+            <div class="p-6 sm:p-8 rounded-2xl glass-panel border-glow-cyan">
+              <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-cyan-400 uppercase mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                Phase 03 // Fluid Dynamics & Venturi
+              </div>
+              <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-super-tight leading-[1.08] text-white mb-4">
+                1,850 kg Downforce. <br>
+                <span class="gradient-text-cyan">Sculpted Ground Effect.</span>
+              </h2>
+              <p class="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed font-normal mb-6">
+                High-velocity aerodynamic CFD streams sculpt airflow through 3D Venturi floor tunnels and aggressive sidepod undercuts, anchoring the car to the asphalt at 250 km/h.
+              </p>
+              <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] text-center">
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">DOWNFORCE</div>
+                  <div class="text-base sm:text-lg font-bold text-cyan-400 font-mono">1,850 kg</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">RIDE HEIGHT</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">28 mm</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">DRS DELTA</div>
+                  <div class="text-base sm:text-lg font-bold text-red-500 font-mono">+24 km/h</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Story Beat 04: Bi-Directional Telemetry (Right Aligned) -->
+          <div id="beat-04" class="story-beat-card max-w-xl self-end text-right pointer-events-auto opacity-0 hidden">
+            <div class="p-6 sm:p-8 rounded-2xl glass-panel border border-white/[0.1]">
+              <div class="flex items-center justify-end gap-2 text-xs font-mono tracking-widest-tag text-cyan-400 uppercase mb-3">
+                Phase 04 // Live Data Stream
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              </div>
+              <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-super-tight leading-[1.08] text-white mb-4">
+                300+ Sensors. <br>
+                <span class="gradient-text-silver">35 MB Per Lap.</span>
+              </h2>
+              <p class="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed font-normal mb-6">
+                Direct telemetry downlink connects the cockpit to the Maranello Remote Garage in real time. Infrared tyre carcass sensors and strain gauges process 1.2 billion data points per race.
+              </p>
+              <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] text-center">
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">LATENCY</div>
+                  <div class="text-base sm:text-lg font-bold text-cyan-400 font-mono">&lt; 8 ms</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">SAMPLING</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">1,000 Hz</div>
+                </div>
+                <div>
+                  <div class="text-[10px] font-mono text-white/40 uppercase">ENCRYPTION</div>
+                  <div class="text-base sm:text-lg font-bold text-white font-mono">256-bit AES</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Story Beat 05: Victory Trim & Reassembly (Left Aligned) -->
+          <div id="beat-05" class="story-beat-card max-w-xl pointer-events-auto opacity-0 hidden">
+            <div class="p-6 sm:p-8 rounded-2xl glass-panel border-glow-cyan">
+              <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-red-500 uppercase mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                Phase 05 // Race Ready
+              </div>
+              <h2 class="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-super-tight leading-[1.08] text-white mb-4">
+                The Pinnacle. <br>
+                <span class="gradient-text-ferrari">Scuderia Ferrari SF-24.</span>
+              </h2>
+              <p class="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed font-normal mb-6">
+                Reassembled with micrometer precision. Piloted by Charles Leclerc (#16) and engineered by Maranello's brightest minds to conquer the FIA Formula One World Championship.
+              </p>
+              <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+                <button id="btn-rev-engine" class="btn-ferrari px-5 sm:px-6 py-3 rounded-full text-xs font-bold tracking-wider font-mono uppercase flex items-center gap-2">
+                  <i data-lucide="flame" class="w-4 h-4 text-yellow-300"></i>
+                  <span>Rev 15,000 RPM Engine</span>
+                </button>
+                <a href="#cad-explorer" class="btn-glass px-5 sm:px-6 py-3 rounded-full text-xs font-medium tracking-tight">
+                  Explore CAD Lab &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Left: Active Chapter & HUD Indicator -->
+        <div class="absolute bottom-6 md:bottom-8 left-6 md:left-12 z-30 flex flex-col gap-2 pointer-events-none">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span id="active-chapter-num" class="text-xs font-mono tracking-widest text-cyan-400 font-semibold">00 / 05</span>
+          </div>
+          <div id="active-chapter-title" class="text-xs sm:text-sm font-semibold tracking-tight text-white/90 uppercase font-mono">
+            SF-24 OVERVIEW
+          </div>
+          <div class="w-32 sm:w-36 h-0.5 bg-white/10 rounded-full overflow-hidden mt-1">
+            <div id="scrolly-progress-bar" class="h-full bg-gradient-to-r from-red-500 to-cyan-400 w-0 transition-all duration-100"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Right: Maranello Clock & Scroll Prompt -->
+        <div class="absolute bottom-6 md:bottom-8 right-6 md:right-12 z-30 flex items-center gap-3 sm:gap-4 text-white/50 text-xs font-mono pointer-events-none">
+          <div id="maranello-clock" class="hidden sm:block">MARANELLO, IT: --:--:-- CET</div>
+          <div class="flex items-center gap-1.5 px-3 py-1 rounded-full glass-panel text-[11px] text-white/70 border border-white/10 shadow-lg">
+            <span>SCROLL TO EXPLODE</span>
+            <i data-lucide="arrow-down" class="w-3 h-3 text-cyan-400 animate-bounce"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 2.5 HISTORICAL ARCHIVE: GENESIS OF SPEED & THE 125 S -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="history" class="relative py-28 px-6 md:px-12 bg-[#060608] border-t border-white/[0.08] scroll-mt-20 overflow-hidden">
+    <!-- Ambient Radial Glows -->
+    <div class="absolute top-1/4 -left-48 w-96 h-96 radial-glow-red pointer-events-none opacity-40"></div>
+    <div class="absolute bottom-10 -right-48 w-96 h-96 radial-glow-cyan pointer-events-none opacity-25"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-red-500 uppercase mb-3">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+            Heritage & Origins // 1947 — 2025
+          </div>
+          <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+            The Genesis of Speed. <br>
+            <span class="gradient-text-ferrari">Forged in Maranello.</span>
+          </h2>
+        </div>
+        <p class="text-sm md:text-base text-white/60 max-w-lg font-normal leading-relaxed">
+          From Enzo Ferrari’s first roar through the gates of Via Abetone Inferiore in 1947 to the only constructor in history to contest every Formula One World Championship season.
+        </p>
+      </div>
+
+      <!-- Spotlight: The First Ferrari — 1947 Ferrari 125 S -->
+      <div class="glass-panel rounded-3xl p-8 md:p-12 mb-16 border border-red-600/30 relative overflow-hidden shadow-2xl">
+        <div class="absolute top-0 right-0 p-8 text-[140px] md:text-[220px] font-black text-white/[0.02] font-mono pointer-events-none select-none">
+          1947
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+          
+          <!-- Left: Narrative & History (7 cols) -->
+          <div class="lg:col-span-7 flex flex-col gap-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel border border-red-500/30 text-red-400 text-xs font-mono tracking-widest uppercase self-start">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              The First Official Ferrari // Chassis 01C
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+              Ferrari 125 S — The Car That Started It All
+            </h3>
+
+            <p class="text-sm md:text-base text-white/75 leading-relaxed font-normal">
+              On <strong class="text-white">March 12, 1947</strong>, Enzo Ferrari took the wheel of the very first car bearing his own name on the historic road outside the Maranello factory gates. Engineered by the legendary <strong class="text-white">Gioacchino Colombo</strong>, the 125 S was an uncompromised racing prototype powered by a compact, high-revving 1.5-litre 60° V12 engine.
+            </p>
+
+            <p class="text-sm md:text-base text-white/70 leading-relaxed font-normal">
+              Just two weeks after its competitive baptism at Piacenza, Franco Cortese drove the 125 S to <strong class="text-red-400">Ferrari's first historic overall victory at the Rome Grand Prix</strong> on May 25, 1947, circling the ancient Baths of Caracalla for 40 laps at an average speed of 88.5 km/h.
+            </p>
+
+            <!-- 125 S Quick Facts -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-white/[0.08]">
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">POWERPLANT</div>
+                <div class="text-sm sm:text-base font-bold font-mono text-white mt-0.5">1.5L Colombo V12</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">HORSEPOWER</div>
+                <div class="text-sm sm:text-base font-bold font-mono text-red-500 mt-0.5">118 HP @ 6.8k</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">TOP SPEED</div>
+                <div class="text-sm sm:text-base font-bold font-mono text-cyan-400 mt-0.5">210 km/h</div>
+              </div>
+              <div>
+                <div class="text-[10px] font-mono text-white/40 uppercase">DRY WEIGHT</div>
+                <div class="text-sm sm:text-base font-bold font-mono text-white mt-0.5">650 kg</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Technical Blueprint Card (5 cols) -->
+          <div class="lg:col-span-5 glass-panel p-6 rounded-2xl border-glow-cyan flex flex-col gap-5">
+            <div class="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+              <span class="text-xs font-mono text-cyan-400 font-semibold tracking-wider">SF-ARCHIVE // SPEC 001</span>
+              <span class="text-[10px] font-mono text-white/40">MARANELLO 1947</span>
+            </div>
+
+            <div class="space-y-3 text-xs font-mono">
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Displacement:</span>
+                <span class="text-white font-bold">1,496.77 cc (125 cc/cyl)</span>
+              </div>
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Bore & Stroke:</span>
+                <span class="text-white font-bold">55.0 mm × 52.5 mm</span>
+              </div>
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Carburetion:</span>
+                <span class="text-white font-bold">3x Weber 30 DCF Dual-Choke</span>
+              </div>
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Chassis Structure:</span>
+                <span class="text-white font-bold">Steel Tubular Spaceframe</span>
+              </div>
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Transmission:</span>
+                <span class="text-white font-bold">5-Speed Manual Longitudinal</span>
+              </div>
+              <div class="flex justify-between p-2 rounded bg-white/[0.03] border border-white/[0.05]">
+                <span class="text-white/50">Braking System:</span>
+                <span class="text-white font-bold">Hydraulic Drum Brakes (4-Wheel)</span>
+              </div>
+            </div>
+
+            <div class="pt-2 text-[11px] font-mono text-white/40 italic flex items-center gap-1.5">
+              <i data-lucide="quote" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <span>"The Ferrari 125 S was my masterpiece of ambition." — Enzo Ferrari</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Historical Era Milestones Grid -->
+      <div class="mb-16">
+        <div class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-4">
+          Key Milestones In Scuderia History
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Era 1: 1951 Silverstone -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-white/[0.08]">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-red-500 font-bold">1951</span>
+                <span>SILVERSTONE GP</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">First Formula 1 Victory</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                José Froilán González drives the 4.5L V12 Ferrari 375 F1 to victory at Silverstone, defeating Alfa Romeo and establishing Ferrari as the new titan of Grand Prix racing.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>DRIVER: J. F. GONZÁLEZ</span>
+              <span class="text-red-400 font-bold">FERRARI 375 F1</span>
+            </div>
+          </div>
+
+          <!-- Era 2: 1952-1953 Ascari -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-white/[0.08]">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-cyan-400 font-bold">1952 — 1953</span>
+                <span>WORLD TITLES</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">Back-to-Back Championships</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                Alberto Ascari dominates the world in the Ferrari 500 F2, winning 9 consecutive Grands Prix—a record that stood untouched for over six decades.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>DRIVER: ALBERTO ASCARI</span>
+              <span class="text-cyan-400 font-bold">FERRARI 500 F2</span>
+            </div>
+          </div>
+
+          <!-- Era 3: 1962 250 GTO -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-white/[0.08]">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-yellow-400 font-bold">1962</span>
+                <span>GT MOTORSPORT</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">The Legendary 250 GTO</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                Powered by a 300 HP 3.0L Colombo V12, the 250 GTO captured three consecutive FIA International Championships for GT Manufacturers, becoming the most revered car on earth.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>HERITAGE: 36 PRODUCED</span>
+              <span class="text-yellow-400 font-bold">250 GTO</span>
+            </div>
+          </div>
+
+          <!-- Era 4: 1975 Niki Lauda & 312T -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-white/[0.08]">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-red-500 font-bold">1975 — 1977</span>
+                <span>FLAT-12 REVOLUTION</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">The 312T Transverse Era</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                Mauro Forghieri's revolutionary transverse gearbox and 500 HP Flat-12 engine propelled Niki Lauda to two World Championships and secured three Constructors' Titles.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>DRIVER: NIKI LAUDA</span>
+              <span class="text-red-400 font-bold">FERRARI 312T</span>
+            </div>
+          </div>
+
+          <!-- Era 5: 2000-2004 Schumacher Golden Age -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-white/[0.08]">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-red-500 font-bold">2000 — 2004</span>
+                <span>GOLDEN ERA</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">5 Consecutive Double Titles</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                Michael Schumacher and Scuderia Ferrari rewrite all record books. The 2004 F2004 with its screaming 3.0L V10 remains one of the most dominant racing machines in human history.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>DRIVER: M. SCHUMACHER</span>
+              <span class="text-red-500 font-bold">FERRARI F2004</span>
+            </div>
+          </div>
+
+          <!-- Era 6: 2024-2025 Modern Apex (SF-24) -->
+          <div class="glass-panel p-6 rounded-2xl glass-card-hover flex flex-col justify-between border border-cyan-500/30">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-white/40 mb-3">
+                <span class="text-cyan-400 font-bold">2024 — 2025</span>
+                <span>GROUND-EFFECT HYBRID</span>
+              </div>
+              <h4 class="text-lg font-bold text-white tracking-tight mb-2">The SF-24 Apex</h4>
+              <p class="text-xs text-white/65 leading-relaxed">
+                Charles Leclerc takes historic victories at Monaco and Monza. 1,020+ HP, dual MGU energy recovery, Venturi ground effects, and real-time millisecond telemetry downlink.
+              </p>
+            </div>
+            <div class="pt-4 border-t border-white/[0.08] mt-4 flex items-center justify-between text-[10px] font-mono text-white/40">
+              <span>DRIVERS: LECLERC & SAINZ</span>
+              <span class="text-cyan-400 font-bold">FERRARI SF-24</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Side-by-Side Evolution Matrix: 1947 125 S vs. 2024 SF-24 -->
+      <div class="glass-panel p-8 md:p-10 rounded-3xl border border-white/[0.08]">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <div class="text-xs font-mono tracking-widest text-white/40 uppercase mb-1">
+              77 Years of Engineering Evolution
+            </div>
+            <h4 class="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              1947 Ferrari 125 S vs. 2024 Ferrari SF-24
+            </h4>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 font-mono text-xs border border-cyan-400/30 self-start">
+            +764% POWER EXPANSION
+          </span>
+        </div>
+
+        <div class="overflow-x-auto no-scrollbar">
+          <table class="w-full text-left text-xs sm:text-sm font-mono">
+            <thead>
+              <tr class="border-b border-white/[0.1] text-white/40 uppercase text-[11px]">
+                <th class="pb-4 font-semibold">Engineering Metric</th>
+                <th class="pb-4 font-semibold text-red-400">1947 Ferrari 125 S (The Genesis)</th>
+                <th class="pb-4 font-semibold text-cyan-400">2024 Ferrari SF-24 (The Apex)</th>
+                <th class="pb-4 font-semibold text-white/80">Evolution Delta</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/[0.05]">
+              <tr>
+                <td class="py-4 text-white/70">Power Output</td>
+                <td class="py-4 text-white font-bold">118 HP @ 6,800 RPM</td>
+                <td class="py-4 text-cyan-400 font-bold">1,020+ HP @ 15,000 RPM</td>
+                <td class="py-4 text-emerald-400 font-bold">+902 HP (+764%)</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Engine Architecture</td>
+                <td class="py-4 text-white">1.5L Naturally Aspirated 60° V12</td>
+                <td class="py-4 text-cyan-400">1.6L 90° V6 Turbo + Dual MGU Hybrid</td>
+                <td class="py-4 text-white/60">Hybrid Turbocompounding</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Specific Power</td>
+                <td class="py-4 text-white">78.8 HP / Litre</td>
+                <td class="py-4 text-cyan-400 font-bold">637.5 HP / Litre</td>
+                <td class="py-4 text-emerald-400 font-bold">+709% Efficiency</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Chassis Technology</td>
+                <td class="py-4 text-white">Tubular Steel Spaceframe</td>
+                <td class="py-4 text-cyan-400">Autoclaved Carbon Honeycomb Tub</td>
+                <td class="py-4 text-white/60">50G Crash / 0 Deflection</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Transmission</td>
+                <td class="py-4 text-white">5-Speed Manual Longitudinal</td>
+                <td class="py-4 text-cyan-400">8-Speed Seamless Quick-Shift (0.005s)</td>
+                <td class="py-4 text-white/60">Instantaneous Torque Shift</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Aerodynamic Downforce</td>
+                <td class="py-4 text-white">~0 kg (Mechanical Drag only)</td>
+                <td class="py-4 text-cyan-400 font-bold">1,850 kg @ 250 km/h (Venturi)</td>
+                <td class="py-4 text-emerald-400 font-bold">Infinite Ground Adhesion</td>
+              </tr>
+              <tr>
+                <td class="py-4 text-white/70">Max Lateral G-Force</td>
+                <td class="py-4 text-white">~0.85 G</td>
+                <td class="py-4 text-cyan-400 font-bold">5.40 G</td>
+                <td class="py-4 text-emerald-400 font-bold">+535% Cornering Load</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 3. INTERACTIVE CAD EXPLODED VIEW LAB SECTION -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="cad-explorer" class="relative py-28 px-6 md:px-12 bg-[#08080a] border-t border-white/[0.08] scroll-mt-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-cyan-400 uppercase mb-2">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            Interactive CAD Diagnostics Lab
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            Exploded Engineering Studio
+          </h2>
+        </div>
+        <p class="text-sm md:text-base text-white/60 max-w-md font-normal">
+          Drag the explosion slider or toggle holographic modes to deconstruct every aerodynamic plane, titanium cage, and hybrid component in real time.
+        </p>
+      </div>
+
+      <!-- Main CAD Workspace Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Interactive Canvas & Control Bar (8 cols) -->
+        <div class="lg:col-span-8 glass-panel p-6 rounded-2xl flex flex-col gap-6">
+          
+          <!-- Viewport Canvas Container -->
+          <div class="relative w-full rounded-xl overflow-hidden bg-[#050505] border border-white/[0.08] telemetry-grid flex items-center justify-center">
+            <canvas id="cad-explorer-canvas" class="w-full h-auto object-contain"></canvas>
+            
+            <!-- Top Right Overlay HUD -->
+            <div class="absolute top-4 right-4 flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded bg-black/60 backdrop-blur-md text-[10px] font-mono text-cyan-400 border border-cyan-500/30">
+                CAD V24.8.1 LIVE
+              </span>
+            </div>
+          </div>
+
+          <!-- Bottom Control Bar -->
+          <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-2">
+            
+            <!-- Explosion Slider -->
+            <div class="flex items-center gap-4 w-full md:w-1/2">
+              <span class="text-xs font-mono text-white/60 whitespace-nowrap">EXPLODE:</span>
+              <input id="cad-explode-slider" type="range" min="0" max="100" value="50" class="w-full">
+              <span id="cad-explode-value" class="text-xs font-mono text-cyan-400 w-10 font-bold">50%</span>
+            </div>
+
+            <!-- Visual Shader Mode Toggles -->
+            <div class="flex items-center gap-1.5 p-1 rounded-lg bg-white/[0.04] border border-white/[0.08] w-full md:w-auto justify-center">
+              <button data-cad-mode="exploded" class="px-3 py-1.5 rounded-md text-xs font-medium bg-cyan-500/20 border border-cyan-400 text-cyan-400 transition-all">Exploded</button>
+              <button data-cad-mode="wireframe" class="px-3 py-1.5 rounded-md text-xs font-medium text-white/70 hover:text-white transition-all">Wireframe</button>
+              <button data-cad-mode="thermal" class="px-3 py-1.5 rounded-md text-xs font-medium text-white/70 hover:text-white transition-all">Thermal</button>
+              <button data-cad-mode="aero" class="px-3 py-1.5 rounded-md text-xs font-medium text-white/70 hover:text-white transition-all">Aero CFD</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Sub-Assembly Selector & Live Specs Drawer (4 cols) -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+          
+          <!-- Sub-Assembly Filters -->
+          <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
+            <h3 class="text-xs font-mono tracking-widest text-white/50 uppercase">Sub-Assembly Selector</h3>
+            
+            <div class="grid grid-cols-2 gap-2">
+              <button data-subassembly="all" class="p-2.5 rounded-lg text-xs font-mono font-medium bg-red-600/20 border border-red-500 text-red-400 text-left transition-all">
+                00 // Entire Chassis
+              </button>
+              <button data-subassembly="front_wing" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left transition-all">
+                01 // Front Wing
+              </button>
+              <button data-subassembly="monocoque_chassis" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left transition-all">
+                02 // Monocoque
+              </button>
+              <button data-subassembly="v6_turbo_hybrid" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left transition-all">
+                03 // 066/12 Power Unit
+              </button>
+              <button data-subassembly="halo_safety" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left transition-all">
+                04 // Titanium Halo
+              </button>
+              <button data-subassembly="rear_wing_drs" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left transition-all">
+                05 // DRS Rear Wing
+              </button>
+              <button data-subassembly="pirelli_wheels" class="p-2.5 rounded-lg text-xs font-mono font-medium glass-panel-subtle text-white/70 hover:text-white text-left col-span-2 transition-all">
+                06 // BBS 18" Wheels & Brakes
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Specification Detail Card -->
+          <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4 border border-cyan-500/20">
+            <div class="flex items-center justify-between">
+              <span id="cad-detail-code" class="text-[10px] font-mono tracking-widest text-cyan-400 uppercase">CHASSIS-SF24-001</span>
+              <span class="text-[10px] font-mono text-white/40">MARANELLO CAD</span>
+            </div>
+            <h4 id="cad-detail-title" class="text-lg font-bold text-white tracking-tight">
+              Scuderia Ferrari SF-24 Integrated Chassis
+            </h4>
+            <div class="text-xs font-mono text-white/50">
+              SPEC WEIGHT: <span id="cad-detail-weight" class="text-white font-bold">798 kg (with driver)</span>
+            </div>
+            <p id="cad-detail-desc" class="text-xs text-white/70 leading-relaxed font-normal">
+              Complete carbon-fibre and honeycomb composite structure compliant with 2024/2025 FIA Technical Regulations.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 4. LIVE TELEMETRY & CIRCUIT SIMULATOR SECTION -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="telemetry" class="relative py-28 px-6 md:px-12 bg-[#050505] border-t border-white/[0.08] scroll-mt-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-red-500 uppercase mb-2">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            Live Telemetry Feed
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            Autodromo Performance Telemetry
+          </h2>
+        </div>
+        
+        <!-- Circuit Selector Buttons -->
+        <div class="flex items-center gap-2 p-1 rounded-lg glass-panel">
+          <button data-circuit="monza" class="px-4 py-1.5 rounded text-xs font-mono bg-white/10 text-cyan-400 font-semibold transition-all">
+            Monza (High Speed)
+          </button>
+          <button data-circuit="monaco" class="px-4 py-1.5 rounded text-xs font-mono text-white/60 hover:text-white transition-all">
+            Monaco (Tight Street)
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Dashboard Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        <!-- Metric 1: Speed -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs font-mono text-white/50">
+            <span>VELOCITY</span>
+            <i data-lucide="gauge" class="w-4 h-4 text-cyan-400"></i>
+          </div>
+          <div class="my-4">
+            <div class="text-4xl md:text-5xl font-extrabold font-mono text-white tracking-tight">
+              <span id="telemetry-speed-val">345</span> <span class="text-sm font-normal text-white/40">KM/H</span>
+            </div>
+          </div>
+          <div class="text-[11px] font-mono text-white/40">MAX: 355 KM/H (RETTIFILO)</div>
+        </div>
+
+        <!-- Metric 2: RPM & Gear -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs font-mono text-white/50">
+            <span>POWERTRAIN RPM</span>
+            <span id="telemetry-drs-badge" class="px-2 py-0.5 rounded bg-white/[0.05] text-white/40 font-mono text-[10px] border border-white/[0.08]">DRS CLOSED</span>
+          </div>
+          <div class="my-4 flex items-baseline justify-between">
+            <div class="text-4xl md:text-5xl font-extrabold font-mono text-red-500 tracking-tight">
+              <span id="telemetry-rpm-val">14,200</span>
+            </div>
+            <div class="text-xl font-mono text-cyan-400 font-bold">
+              GEAR <span id="telemetry-gear-val" class="text-2xl">8</span>
+            </div>
+          </div>
+          <div class="text-[11px] font-mono text-white/40">LIMITER: 15,000 RPM</div>
+        </div>
+
+        <!-- Metric 3: Throttle & Brake Pedals -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs font-mono text-white/50">
+            <span>DRIVER PEDAL INPUTS</span>
+            <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="my-4 flex flex-col gap-3">
+            <div>
+              <div class="flex justify-between text-[10px] font-mono text-white/60 mb-1">
+                <span>THROTTLE</span>
+                <span class="text-emerald-400">100%</span>
+              </div>
+              <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                <div id="telemetry-throttle-bar" class="h-full bg-emerald-500 w-full transition-all duration-75"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[10px] font-mono text-white/60 mb-1">
+                <span>BRAKE</span>
+                <span class="text-red-500">0%</span>
+              </div>
+              <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                <div id="telemetry-brake-bar" class="h-full bg-red-600 w-0 transition-all duration-75"></div>
+              </div>
+            </div>
+          </div>
+          <div class="text-[11px] font-mono text-white/40">BRAKE PRESSURE: 130 BAR</div>
+        </div>
+
+        <!-- Metric 4: Lateral G-Force & Heat -->
+        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs font-mono text-white/50">
+            <span>LATERAL ACCELERATION</span>
+            <i data-lucide="compass" class="w-4 h-4 text-yellow-400"></i>
+          </div>
+          <div class="my-4">
+            <div class="text-4xl md:text-5xl font-extrabold font-mono text-cyan-400 tracking-tight">
+              <span id="telemetry-gforce-val">4.8 G</span>
+            </div>
+          </div>
+          <div class="flex justify-between text-[10px] font-mono text-white/40">
+            <span>TYRE FL: 104°C</span>
+            <span>TYRE RR: 115°C</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Real-Time Lap Trace Waveform Canvas -->
+      <div class="glass-panel p-6 rounded-2xl flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <span id="telemetry-circuit-name" class="text-xs font-mono text-white/70">Autodromo Nazionale Monza - Lap 14/53</span>
+          <span class="text-xs font-mono text-cyan-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            LIVE TRACE
+          </span>
+        </div>
+        <div class="w-full h-36 rounded-xl overflow-hidden bg-[#050505] border border-white/[0.08] relative">
+          <canvas id="telemetry-chart-canvas" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 5. ENGINEERING SPECIFICATION MATRIX (APPLE STYLE) -->
+  <!-- ------------------------------------------------------------- -->
+  <section class="relative py-28 px-6 md:px-12 bg-[#08080a] border-t border-white/[0.08]">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-2xl mx-auto mb-20">
+        <div class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-3">
+          Benchmark Technical Data
+        </div>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
+          Engineered for Total Dominance.
+        </h2>
+        <p class="text-white/60 text-sm md:text-base">
+          Every dimension and thermal boundary optimized to the fractional millimeter.
+        </p>
+      </div>
+
+      <!-- Apple-style Big Number Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- Card 1 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">0 TO 100 KM/H</div>
+            <div class="text-5xl font-extrabold font-mono text-white tracking-tight mb-2">2.1s</div>
+            <div class="text-sm font-semibold text-cyan-400 mb-3">Instantaneous Hybrid Torque</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              MGU-K instant torque fill eliminates all internal combustion turbo lag during corner exit acceleration.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">MAX CORNERING FORCE</div>
+            <div class="text-5xl font-extrabold font-mono text-red-500 tracking-tight mb-2">5.4 G</div>
+            <div class="text-sm font-semibold text-white mb-3">Lateral Tire Adhesion</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              Achieved through high-load Venturi suction and Pirelli bespoke compound polymers at high-speed sweeping corners like Copse and Parabolica.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">ENERGY HARVESTING</div>
+            <div class="text-5xl font-extrabold font-mono text-cyan-400 tracking-tight mb-2">4.0 MJ</div>
+            <div class="text-sm font-semibold text-white mb-3">Per Lap Hybrid Battery Flow</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              Brembo brake-by-wire regeneration converts kinetic braking deceleration directly into 800V battery charge.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">MAX ENGINE SPEED</div>
+            <div class="text-5xl font-extrabold font-mono text-white tracking-tight mb-2">15,000</div>
+            <div class="text-sm font-semibold text-red-500 mb-3">RPM Redline Frequency</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              Pneumatic valve springs and lightweight titanium connecting rods engineered to cycle at 250 revolutions per second.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">TRANSMISSION SHIFT TIME</div>
+            <div class="text-5xl font-extrabold font-mono text-white tracking-tight mb-2">0.005s</div>
+            <div class="text-sm font-semibold text-cyan-400 mb-3">Seamless-Shift 8-Speed</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              Carbon-cased longitudinal quick-shift gearbox with zero loss of tractive torque between consecutive gear engagements.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between">
+          <div>
+            <div class="text-xs font-mono text-white/40 mb-2">MINIMUM FIA WEIGHT</div>
+            <div class="text-5xl font-extrabold font-mono text-white tracking-tight mb-2">798 kg</div>
+            <div class="text-sm font-semibold text-white mb-3">With Driver & Ballast</div>
+            <p class="text-xs text-white/60 leading-relaxed">
+              Ultra-lightweight aerospace carbon weave and 3D printed Inconel alloy exhaust manifolds minimize unsprung mass.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 6. DRIVERS & SCUDERIA HERITAGE SECTION -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="current-season" class="relative py-28 px-6 md:px-12 bg-[#050505] border-t border-white/[0.08] scroll-mt-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono tracking-widest-tag text-red-500 uppercase mb-2">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+            2024 / 2025 F1 World Championship Lineup
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">
+            Scuderia Ferrari Lineup
+          </h2>
+        </div>
+        <p class="text-sm md:text-base text-white/60 max-w-md font-normal leading-relaxed">
+          Charles Leclerc and Sir Lewis Hamilton unite under the Prancing Horse, forming one of the most formidable driver lineups in Formula One history.
+        </p>
+      </div>
+
+      <!-- Drivers Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        
+        <!-- Driver 1: Charles Leclerc -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between relative overflow-hidden border border-red-600/30">
+          <div class="absolute -right-10 -bottom-10 text-[180px] font-black text-white/[0.03] font-mono pointer-events-none select-none z-0">
+            16
+          </div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-xs font-mono px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30">
+                CAR #16 // MONACO
+              </span>
+              <span class="text-xs font-mono text-white/40">SCUDERIA FERRARI</span>
+            </div>
+            <h3 class="text-3xl font-extrabold text-white tracking-tight mb-2">Charles Leclerc</h3>
+            <p class="text-sm text-white/70 leading-relaxed font-normal mb-6">
+              Monaco-born virtuoso and Ferrari academy graduate. Victorious at the 2024 Monaco Grand Prix and 2024 Italian Grand Prix at Monza, revered for unmatchable one-lap qualifying brilliance and lightning reflexes.
+            </p>
+          </div>
+          <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] relative z-10">
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">POLE POSITIONS</div>
+              <div class="text-lg font-bold text-white font-mono">26+</div>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">PODIUMS</div>
+              <div class="text-lg font-bold text-cyan-400 font-mono">42+</div>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">RACE WINS</div>
+              <div class="text-lg font-bold text-red-500 font-mono">8 GP Wins</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Driver 2: Sir Lewis Hamilton -->
+        <div class="glass-panel p-8 rounded-2xl glass-card-hover flex flex-col justify-between relative overflow-hidden border border-cyan-500/30">
+          <div class="absolute -right-10 -bottom-10 text-[180px] font-black text-white/[0.03] font-mono pointer-events-none select-none z-0">
+            44
+          </div>
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                CAR #44 // 7X WORLD CHAMPION
+              </span>
+              <span class="text-xs font-mono text-white/40">MARANELLO ERA 2025</span>
+            </div>
+            <h3 class="text-3xl font-extrabold text-white tracking-tight mb-2">Sir Lewis Hamilton</h3>
+            <p class="text-sm text-white/70 leading-relaxed font-normal mb-6">
+              The most decorated driver in Formula One history joins Scuderia Ferrari in a historic global transfer. Bringing 7 World Championships, 105+ Grand Prix victories, and unmatched championship racecraft to Maranello.
+            </p>
+          </div>
+          <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.08] relative z-10">
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">WORLD TITLES</div>
+              <div class="text-lg font-bold text-yellow-400 font-mono">7 Titles</div>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">RACE WINS</div>
+              <div class="text-lg font-bold text-white font-mono">105+ Wins</div>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono text-white/40 uppercase">POLE POSITIONS</div>
+              <div class="text-lg font-bold text-cyan-400 font-mono">104 Poles</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scuderia Maranello Command Banner -->
+      <div class="glass-panel p-6 sm:p-8 rounded-2xl border border-white/[0.08] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-black font-black text-lg shadow-[0_0_20px_rgba(225,6,0,0.5)]">
+            SF
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-bold text-white tracking-tight">Scuderia Ferrari Team Command</h4>
+            <p class="text-xs text-white/60 font-mono">Led by Team Principal Frédéric Vasseur // Maranello Technical Centre</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-6 sm:gap-8 font-mono text-center">
+          <div>
+            <div class="text-[10px] text-white/40 uppercase">WCC TITLES</div>
+            <div class="text-base sm:text-xl font-bold text-yellow-400">16 Titles</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-white/40 uppercase">WDC TITLES</div>
+            <div class="text-base sm:text-xl font-bold text-white">15 Titles</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-white/40 uppercase">GRAND PRIX WINS</div>
+            <div class="text-base sm:text-xl font-bold text-cyan-400">245+</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 7. TIFOSI FAN BASE & VIP PASS SECTION -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="fan-base" class="relative py-28 px-6 md:px-12 bg-[#08080a] border-t border-white/[0.08] scroll-mt-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="glass-panel p-10 md:p-16 rounded-3xl relative overflow-hidden border border-red-600/30 flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div class="absolute inset-0 radial-glow-red pointer-events-none opacity-50 z-0"></div>
+        
+        <div class="max-w-xl z-10 relative">
+          <div class="text-xs font-mono tracking-widest text-red-500 uppercase mb-3">
+            Tifosi Official Membership
+          </div>
+          <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-6">
+            Join the Heart of <br>
+            <span class="gradient-text-ferrari">Scuderia Ferrari.</span>
+          </h2>
+          <p class="text-white/70 text-sm md:text-base leading-relaxed mb-8">
+            Gain exclusive paddock telemetry access, VIP garage tours at Monza, private pit-lane broadcasts, and early access to limited edition Scuderia Ferrari team gear.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a id="btn-vip-pass" href="mailto:manekar.zuhaib@gmail.com?subject=Scuderia%20Ferrari%20VIP%20Paddock%20Pass%20Inquiry&body=Hello%20Zuhaib%2C%0A%0AI%20would%20like%20to%20request%20information%20and%20VIP%20Paddock%20Pass%20access%20for%20the%20upcoming%20Formula%20One%20season.%0A%0AThank%20you!" class="btn-ferrari px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider font-mono shadow-lg inline-flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              <span>Get VIP Paddock Pass</span>
+            </a>
+            <a href="#gallery" class="btn-glass px-6 py-3.5 rounded-full text-xs font-medium tracking-tight">
+              View Team Gallery &rarr;
+            </a>
+          </div>
+        </div>
+
+        <!-- VIP Membership Pass Mockup -->
+        <div class="w-full max-w-sm glass-panel p-6 rounded-2xl border-glow-cyan z-10 shadow-2xl relative">
+          <div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 bg-red-600 rounded-sm"></div>
+              <span class="text-xs font-mono font-bold text-white">SCUDERIA FERRARI VIP</span>
+            </div>
+            <span class="text-[10px] font-mono text-cyan-400">PASSPORT 2025</span>
+          </div>
+          <div class="my-6">
+            <div class="text-[10px] font-mono text-white/40 uppercase">MEMBER NAME</div>
+            <div class="text-lg font-bold text-white font-mono">TIFOSI RACING CLUB</div>
+            <div class="text-[10px] font-mono text-white/40 uppercase mt-4">SERIAL CODE</div>
+            <div class="text-sm font-mono text-cyan-400">SF24-VIP-0994-ITA</div>
+          </div>
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-white/50">
+            <span>PIT-LANE ACCESS: GRANTED</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 8. GALLERY LIGHTBOX SECTION -->
+  <!-- ------------------------------------------------------------- -->
+  <section id="gallery" class="relative py-28 px-6 md:px-12 bg-[#050505] border-t border-white/[0.08] scroll-mt-20">
+    <div class="max-w-7xl mx-auto">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <div class="text-xs font-mono tracking-widest text-cyan-400 uppercase mb-3">
+          Visual Archive
+        </div>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
+          Maranello In Focus
+        </h2>
+        <p class="text-white/60 text-sm md:text-base">
+          High-definition captures of the SF-24 across test tracks and championship circuits.
+        </p>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-panel rounded-2xl overflow-hidden group relative">
+          <img src="assets/ferrari_clean.png" alt="Ferrari SF-24 Studio View" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+            <span class="text-xs font-mono text-white/90">01 // SF-24 Studio Silhouette</span>
+          </div>
+        </div>
+        <div class="glass-panel rounded-2xl overflow-hidden group relative">
+          <img src="assets/sequence/frame_045.jpg" alt="Ferrari SF-24 Exploded View" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+            <span class="text-xs font-mono text-cyan-400">02 // Exploded CAD Deconstruction</span>
+          </div>
+        </div>
+        <div class="glass-panel rounded-2xl overflow-hidden group relative">
+          <img src="assets/sequence/frame_088.jpg" alt="Ferrari SF-24 Race Ready" class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
+            <span class="text-xs font-mono text-red-400">03 // Full Aerodynamic Race Trim</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 9. APPLE-GRADE MINIMAL LUXURY FOOTER -->
+  <!-- ------------------------------------------------------------- -->
+  <footer class="relative py-16 px-6 md:px-12 bg-[#050505] border-t border-white/[0.08] text-white/50 text-xs">
+    <div class="max-w-7xl mx-auto flex flex-col gap-10">
+      
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-5 h-5 rounded-sm bg-red-600 flex items-center justify-center text-black font-black text-[10px]">
+            SF
+          </div>
+          <span class="text-sm font-semibold tracking-tight text-white/90">Scuderia Ferrari HP</span>
+          <span class="text-[11px] font-mono text-white/40">Via Abetone Inferiore n. 4, Maranello (MO), Italy</span>
+        </div>
+        <div class="flex items-center gap-6 font-mono text-[11px]">
+          <span>45°20'00"N, 10°52'00"E</span>
+          <a href="#" class="text-cyan-400 hover:underline">Top &uarr;</a>
+        </div>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/[0.05] text-[11px]">
+        <div>&copy; 2024-2025 Ferrari S.p.A. All rights reserved. Awwwards Creative Showcase.</div>
+        <div class="flex items-center gap-6">
+          <a href="#overview" class="hover:text-white transition-colors">Overview</a>
+          <a href="#history" class="hover:text-white transition-colors">History</a>
+          <a href="#cad-explorer" class="hover:text-white transition-colors">CAD Explorer</a>
+          <a href="#telemetry" class="hover:text-white transition-colors">Live Telemetry</a>
+          <a href="#current-season" class="hover:text-white transition-colors">Current Season</a>
+          <a href="#fan-base" class="hover:text-white transition-colors">Tifosi Club</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ------------------------------------------------------------- -->
+  <!-- 10. HOTSPOT DETAIL MODAL -->
+  <!-- ------------------------------------------------------------- -->
+  <div id="hotspot-modal" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6">
+    <div class="glass-panel p-8 rounded-3xl max-w-lg w-full border border-cyan-500/30 relative flex flex-col gap-6 shadow-2xl">
+      <button id="hotspot-modal-close" class="absolute top-6 right-6 p-2 rounded-full glass-panel text-white/60 hover:text-white hover:border-cyan-400/40" aria-label="Close Modal">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      
+      <div>
+        <div class="text-[10px] font-mono tracking-widest text-cyan-400 uppercase mb-1">
+          Component Telemetry Diagnostics
+        </div>
+        <h3 id="hotspot-modal-title" class="text-2xl font-bold text-white tracking-tight"></h3>
+        <div id="hotspot-modal-subtitle" class="text-xs text-white/50 font-mono mt-1"></div>
+      </div>
+
+      <p id="hotspot-modal-desc" class="text-sm text-white/70 leading-relaxed"></p>
+
+      <div id="hotspot-modal-specs" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+
+      <div class="pt-4 border-t border-white/[0.08] flex justify-end">
+        <button onclick="document.getElementById('hotspot-modal').classList.add('hidden')" class="btn-glass px-5 py-2 rounded-full text-xs font-mono text-white/80 hover:text-white">
+          Close Diagnostics
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Initialize Lucide Icons -->
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
