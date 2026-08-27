@@ -499,6 +499,7 @@ function closeHotspotModal() {
 }
 
 // -------------------------------------------------------------
+// -------------------------------------------------------------
 // 4. INTERACTIVE CAD EXPLODED VIEW LAB
 // -------------------------------------------------------------
 const cadCanvas = document.getElementById('cad-explorer-canvas');
@@ -508,20 +509,29 @@ const cadBaseImage = new Image();
 // Fetch base image from Node.js backend API
 cadBaseImage.src = '/api/base-image';
 
-// Fetch CAD components from Node.js backend API
+// Redraw canvas once base image loads
+cadBaseImage.onload = () => {
+  renderCadExplorer();
+};
+
+// Component definition with increased explosion displacement offsets (ox, oy)
 const cadComponents = {
-  front_wing: { src: '/api/components/front_wing.png', ox: -40, oy: 25, label: 'Aero Front Wing' },
+  front_wing: { src: '/api/components/front_wing.png', ox: -120, oy: 60, label: 'Aero Front Wing' },
   monocoque_chassis: { src: '/api/components/monocoque_chassis.png', ox: 0, oy: 0, label: 'Carbon Monocoque' },
-  v6_turbo_hybrid: { src: '/api/components/v6_turbo_hybrid.png', ox: 20, oy: -45, label: '066/12 Power Unit' },
-  halo_safety: { src: '/api/components/halo_safety.png', ox: -5, oy: -30, label: 'Titanium Halo' },
-  rear_wing_drs: { src: '/api/components/rear_wing_drs.png', ox: 30, oy: -35, label: 'DRS Rear Assembly' },
-  pirelli_wheels: { src: '/api/components/pirelli_wheels.png', ox: 0, oy: 15, label: 'Pirelli 18" Wheels' }
+  v6_turbo_hybrid: { src: '/api/components/v6_turbo_hybrid.png', ox: 80, oy: -100, label: '066/12 Power Unit' },
+  halo_safety: { src: '/api/components/halo_safety.png', ox: -20, oy: -80, label: 'Titanium Halo' },
+  rear_wing_drs: { src: '/api/components/rear_wing_drs.png', ox: 100, oy: -90, label: 'DRS Rear Assembly' },
+  pirelli_wheels: { src: '/api/components/pirelli_wheels.png', ox: 0, oy: 50, label: 'Pirelli 18" Wheels' }
 };
 
 const loadedCadImages = {};
 Object.entries(cadComponents).forEach(([key, val]) => {
   const img = new Image();
   img.src = val.src;
+  // Redraw canvas automatically as each component image loads
+  img.onload = () => {
+    renderCadExplorer();
+  };
   loadedCadImages[key] = img;
 });
 
